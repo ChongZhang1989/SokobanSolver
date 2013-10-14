@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <vector>
 #include <queue>
+#include <map>
 #include <tr1/unordered_map>
 #include <tr1/unordered_set>
 using namespace std;
@@ -28,6 +29,7 @@ struct State {
 	vector<Position>box;
 	vector<char>move;
 };
+
 #define isWall(c) (c == '#' ? true : false)
 #define isGoal(c) (c == '.' ? 1 : ( c == '+' ? 2 : ( c == '*' ? 3 : 0) ) )
 #define isPerson(c) (c == '@' ? 1 : ( c == '+' ? 2 : 0) )
@@ -79,6 +81,9 @@ public:
 		return true;
 	}
 };
+
+
+typedef std::tr1::unordered_set<State, StateHash, StateEqual> StateSet;
 
 // functions
 void BFS(vector<string> ground);

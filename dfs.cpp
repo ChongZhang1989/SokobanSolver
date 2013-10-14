@@ -1,6 +1,6 @@
 #include "sokoban.h"
 
-void dfs(std::tr1::unordered_set<State, StateHash, StateEqual> &rec, vector<string> &ground, State state, int &flg, State &result)
+void dfs(StateSet &rec, vector<string> &ground, State state, int &flg, State &result)
 {
 	// got a result, return
 	if (flg)
@@ -29,7 +29,7 @@ void DFS(vector<string> ground)
 {
 	State init;
 	initState(ground, init);
-	std::tr1::unordered_set<State, StateHash, StateEqual>rec;
+	StateSet rec;
 	int flg = 0;
 	State result;
 	dfs(rec, ground, init, flg, result);

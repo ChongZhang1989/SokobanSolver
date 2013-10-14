@@ -7,7 +7,7 @@ void BFS(vector<string> ground)
 {
 	State init;
 	queue<State>q;
-	std::tr1::unordered_set<State, StateHash, StateEqual>rec;
+	StateSet rec;
 	// initialize the first state
 	initState(ground, init);
 	q.push(init);
