@@ -3,7 +3,7 @@
 /**
  * initialize the first state of the search
  */
-void initState(vector<string> &ground, State &init)
+void initState(const vector<string> &ground, State &init)
 {
 	// initialization
 	for (int i = 0; i < ground.size(); ++i) {
@@ -21,7 +21,7 @@ void initState(vector<string> &ground, State &init)
 /**
  * Test whether the box can be moved to this place
  */
-int isValidBox(Position &box, State &now, vector<string> &ground)
+int isValidBox(Position &box, State &now, const vector<string> &ground)
 {
 	// boundary check
 	if (box.x >= ground.size() || box.x < 0)
@@ -45,7 +45,7 @@ int isValidBox(Position &box, State &now, vector<string> &ground)
 /**
  * Test whether the "now" state is valid
  */
-int validState(int dx, int dy, State &now, vector<string> &ground)
+int validState(int dx, int dy, State &now, const vector<string> &ground)
 {
 	// boundary check
 	if (now.person.x >= ground.size() || now.person.x < 0)
@@ -56,8 +56,10 @@ int validState(int dx, int dy, State &now, vector<string> &ground)
 	if (isWall(ground[now.person.x][now.person.y]))
 		return 0;
 	// check boxes overlap with person
+	int personOverlapBox = 1;
 	for (int i = 0; i < now.box.size(); ++i) {
 		if (now.box[i] == now.person) {
+			personOverlapBox = 2;
 			now.box[i].x += dx;
 			now.box[i].y += dy;
 			if (!isValidBox(now.box[i], now, ground)) {
@@ -68,8 +70,22 @@ int validState(int dx, int dy, State &now, vector<string> &ground)
 	// terminal state?
 	for (int i = 0; i < now.box.size(); ++i) {
 		if (!isGoal(ground[now.box[i].x][now.box[i].y])) {
-			return 1;
+			return personOverlapBox;
 		}
 	}
 	return -1;
+}
+
+/**
+ * output the solution of the solver
+ */
+void outputSolution(State &s)
+{
+	if (s.move.size() != 0) {
+		printf("%c", s.move[0]);
+	}
+	for (int i = 1; i < s.move.size(); ++i) {
+		printf(", %c", s.move[i]);
+	}
+	puts("");
 }

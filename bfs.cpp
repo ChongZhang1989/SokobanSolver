@@ -3,7 +3,7 @@
 /**
  * BFS to find the solution
  */
-void BFS(vector<string> ground)
+void BFS(const vector<string> &ground)
 {
 	State init;
 	queue<State>q;
@@ -34,10 +34,5 @@ void BFS(vector<string> ground)
 		q.pop();
 	}
 end:
-	if (terminal.move.size() > 0)
-		printf("%c", terminal.move[0]);
-	for (int i = 1; i < terminal.move.size(); ++i) {
-		printf(", %c ", terminal.move[i]);
-	}
-	puts("");
+	outputSolution(terminal);
 }

@@ -1,6 +1,9 @@
 #include "sokoban.h"
 
-void dfs(StateSet &rec, vector<string> &ground, State state, int &flg, State &result)
+/**
+ * recursive solver
+ */
+void dfs(StateSet &rec, const vector<string> &ground, State state, int &flg, State &result)
 {
 	// got a result, return
 	if (flg)
@@ -25,7 +28,7 @@ void dfs(StateSet &rec, vector<string> &ground, State state, int &flg, State &re
 /**
  * dfs to the solution
  */
-void DFS(vector<string> ground)
+void DFS(const vector<string> &ground)
 {
 	State init;
 	initState(ground, init);
@@ -34,10 +37,6 @@ void DFS(vector<string> ground)
 	State result;
 	dfs(rec, ground, init, flg, result);
 	if (flg) {
-		printf("%c", result.move[0]);
-		for (int i = 1; i < result.move.size(); ++i) {
-			printf(", %c", result.move[i]);
-		}
-		puts("");
+		outputSolution(result);
 	}
 }

@@ -1,1 +1,1 @@
-g++ bfs.cpp helper.cpp sokoban.cpp dfs.cpp -o test
+g++ bfs.cpp helper.cpp sokoban.cpp dfs.cpp ucs.cpp -o test

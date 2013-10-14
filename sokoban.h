@@ -30,7 +30,7 @@ struct State {
 	vector<char>move;
 };
 
-#define isWall(c) (c == '#' ? true : false)
+#define isWall(c) (c == '#' ? 1 : 0)
 #define isGoal(c) (c == '.' ? 1 : ( c == '+' ? 2 : ( c == '*' ? 3 : 0) ) )
 #define isPerson(c) (c == '@' ? 1 : ( c == '+' ? 2 : 0) )
 #define isBox(c) (c == '$' ? 1 : ( c == '*' ? 2 : 0 ) )
@@ -86,9 +86,11 @@ public:
 typedef std::tr1::unordered_set<State, StateHash, StateEqual> StateSet;
 
 // functions
-void BFS(vector<string> ground);
-void DFS(vector<string> ground);
-int validState(int dx, int dy, State &now, vector<string> &ground);
-void initState(vector<string> &ground, State &init);
+void BFS(const vector<string> &ground);
+void DFS(const vector<string> &ground);
+void UCS(const vector<string> &ground);
+int validState(int dx, int dy, State &now, const vector<string> &ground);
+void initState(const vector<string> &ground, State &init);
+void outputSolution(State &s);
 
 #endif

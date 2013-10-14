@@ -28,6 +28,7 @@ int main()
 	switch(choice) {
 		case 1: BFS(ground); break;
 		case 2: DFS(ground); break;
+		case 3: UCS(ground); break;
 	}
 	return 0;
 }
