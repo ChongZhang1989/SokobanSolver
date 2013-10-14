@@ -89,3 +89,17 @@ void outputSolution(State &s)
 	}
 	puts("");
 }
+
+/**
+ * get the goal positions
+ */
+void getGoalPosition(const vector<string> &ground, vector<Position> &goal)
+{
+	for (int i = 0; i < ground.size(); ++i) {
+		for (int j = 0; j < ground[i].size(); ++j) {
+			if (isGoal(ground[i][j])) {
+				goal.push_back(Position(i, j));
+			}
+		}
+	}
+}

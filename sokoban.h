@@ -4,6 +4,7 @@
 #include <vector>
 #include <queue>
 #include <map>
+#include <time.h>
 #include <tr1/unordered_map>
 #include <tr1/unordered_set>
 using namespace std;
@@ -89,8 +90,10 @@ typedef std::tr1::unordered_set<State, StateHash, StateEqual> StateSet;
 void BFS(const vector<string> &ground);
 void DFS(const vector<string> &ground);
 void UCS(const vector<string> &ground);
+void GFS(const vector<string> &ground);
 int validState(int dx, int dy, State &now, const vector<string> &ground);
 void initState(const vector<string> &ground, State &init);
 void outputSolution(State &s);
+void getGoalPosition(const vector<string> &ground, vector<Position> &goal);
 
 #endif

@@ -11,6 +11,9 @@ struct UCSState {
 	}
 };
 
+/**
+ * Uniform Cost Search
+ */
 void UCS(const vector<string> &ground)
 {
 	priority_queue<UCSState>q;
@@ -21,8 +24,10 @@ void UCS(const vector<string> &ground)
 	rec.insert(init.state);
 	UCSState result;
 	while (!q.empty()) {
+		UCSState tmp = q.top();
+		q.pop();
 		for (int i = 0; i < 4; ++i) {
-			UCSState now = q.top();
+			UCSState now = tmp;
 			now.state.person.x += direction[i][0];
 			now.state.person.y += direction[i][1];
 			int s = validState(direction[i][0], direction[i][1], now.state, ground);
@@ -36,7 +41,6 @@ void UCS(const vector<string> &ground)
 				q.push(now);
 			}
 		}
-		q.pop();
 	}
 end:
 	outputSolution(result.state);
