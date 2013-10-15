@@ -18,10 +18,18 @@ struct GFSState {
 void evaluate(vector<Position> &goal, GFSState &s)
 {
 	int cost = 0;
+	vector<bool>v(s.state.box.size(), false);
 	for (int i = 0; i < goal.size(); ++i) {
+		int mindis = 0x7fffffff;
+		int p = 0;
 		for (int j = 0; j < s.state.box.size(); ++j) {
-			cost += distance(goal[i], s.state.box[j]);
+			if (!v[j] && mindis > distance(goal[i], s.state.box[j])) {
+				mindis = distance(goal[i], s.state.box[j]);
+				p = j;
+			}
 		}
+		v[p] = true;
+		cost += mindis;
 	}
 	s.cost = cost;
 }
