@@ -1,4 +1,18 @@
 #include "sokoban.h"
+int horizontalFreeze(int i, vector<int> &hfreeze, vector<int> &vfreeze, State &now, const vector<string> &ground);
+int verticalFreeze(int i, vector<int> &hfreeze, vector<int> &vfreeze, State &now, const vector<string> &ground);
+
+/**
+ * judge if p is out of boundary
+ */
+int outOfBoundary(const vector<string> &ground, Position p)
+{
+	if (p.x >= ground.size() || p.x < 0)
+		return 1;
+	if (p.y >= ground[p.x].size() || p.y < 0)
+		return 1;
+	return 0;
+}
 
 /**
  * initialize the first state of the search
@@ -18,9 +32,124 @@ void initState(const vector<string> &ground, State &init)
 	}
 }
 
+int isBox2(State &now, int x, int y)
+{
+	for (int i = 0; i < now.box.size(); ++i)
+		if (now.box[i].x == x && now.box[i].y == y)
+			return i;
+	return -1;
+}
+
+int horizontalFreeze(int i, vector<int> &hfreeze, vector<int> &vfreeze, State &now, const vector<string> &ground)
+{
+	if (hfreeze[i] >= 0)
+		return hfreeze[i];
+	hfreeze[i] = -1;
+	int x = now.box[i].x;
+	int y = now.box[i].y;
+	// if left side or right side is wall
+	if ( (outOfBoundary(ground, Position(x, y - 1)) || isWall(ground[x][y - 1]) ) ||
+		 (outOfBoundary(ground, Position(x, y + 1)) || isWall(ground[x][y + 1]) ) ) {
+		return hfreeze[i] = 0;
+	}
+	// if left side and right side are dead squares
+	if (isDeadSquare(ground[x][y - 1]) && isDeadSquare(ground[x][y + 1])) {
+		return hfreeze[i] = 0;
+	}
+	// if left side or right side is box?
+	int b = isBox2(now, x, y - 1);
+	if (b != -1) {
+		if (vfreeze[b] == 0 || vfreeze[b] == -1)
+			return hfreeze[b] = 0;
+		if (vfreeze[b] == -2) {
+			if (verticalFreeze(b, hfreeze, vfreeze, now, ground) == 0) {
+				return hfreeze[i] = 0;
+			}
+		}
+	}
+	b = isBox2(now, x, y + 1);
+	if (b != -1) {
+		if (vfreeze[b] == 0 || vfreeze[b] == -1)
+			return hfreeze[b] = 0;
+		if (vfreeze[b] == -2) {
+			if (verticalFreeze(b, hfreeze, vfreeze, now, ground) == 0) {
+				return hfreeze[i] = 0;
+			}
+		}
+	}
+	return hfreeze[i] = 1;
+}
+
+int verticalFreeze(int i, vector<int> &hfreeze, vector<int> &vfreeze, State &now, const vector<string> &ground)
+{
+	if (vfreeze[i] >= 0)
+		return vfreeze[i];
+	vfreeze[i] = -1;
+	int x = now.box[i].x;
+	int y = now.box[i].y;
+	// if left side or right side is wall
+	if ( (outOfBoundary(ground, Position(x - 1, y)) || isWall(ground[x - 1][y]) ) ||
+		 (outOfBoundary(ground, Position(x + 1, y)) || isWall(ground[x + 1][y]) ) ) {
+		return vfreeze[i] = 0;
+	}
+	// if left side and right side are dead squares
+	if (isDeadSquare(ground[x - 1][y]) && isDeadSquare(ground[x + 1][y])) {
+		return vfreeze[i] = 0;
+	}
+	// if left side or right side is box?
+	int b = isBox2(now, x - 1, y);	
+	if (b != -1) {
+		if (hfreeze[b] == 0 || hfreeze[b] == -1) {
+			return vfreeze[i] = 0;
+		}
+		if (hfreeze[b] == -2) {
+			if (horizontalFreeze(b, hfreeze, vfreeze, now, ground) == 0) {
+				return vfreeze[i] = 0;
+			}
+		}
+	}
+	b = isBox2(now, x + 1, y);
+	if (b != -1) {
+		if (hfreeze[b] == 0 || hfreeze[b] == -1) {
+			return vfreeze[b] = 0;
+		}
+		if (hfreeze[b] == -2) {
+			if (horizontalFreeze(b, hfreeze, vfreeze, now, ground) == 0) {
+				return vfreeze[i] = 0;
+			}
+		}
+	}
+	return vfreeze[i] = 1;
+}
+
+
+/**
+ * judge if the current state is freeze deadlock
+ */
+int isFreezeDeadlock(State &now, const vector<string> &ground)
+{
+	vector<int>hfreeze(now.box.size(), -2);
+	vector<int>vfreeze(now.box.size(), -2);
+	for (int i = 0; i < now.box.size(); ++i) {
+		horizontalFreeze(i, hfreeze, vfreeze, now, ground);
+		verticalFreeze(i, hfreeze, vfreeze, now, ground);
+	}
+	for (int i = 0; i < hfreeze.size(); ++i) {
+		if (hfreeze[i] == 0 && vfreeze[i] == 0 && !isGoal(ground[now.box[i].x][now.box[i].y])) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+/**
+ * judge if the current state is a deadlock
+ */
 int isdeadlock(Position &box, State &now, const vector<string> &ground)
 {
 	if (isDeadSquare(ground[box.x][box.y]))
+		return 1;
+	if (isFreezeDeadlock(now, ground))
 		return 1;
 	return 0;
 }
@@ -71,9 +200,8 @@ int validState(int dx, int dy, State &now, const vector<string> &ground)
 			personOverlapBox = 2;
 			now.box[i].x += dx;
 			now.box[i].y += dy;
-			if (!isValidBox(now.box[i], now, ground)) {
+			if (!isValidBox(now.box[i], now, ground))
 				return 0;
-			}
 		}
 	}
 	// terminal state?
@@ -111,16 +239,4 @@ void getGoalPosition(const vector<string> &ground, vector<Position> &goal)
 			}
 		}
 	}
-}
-
-/**
- * judge if p is out of boundary
- */
-int outOfBoundary(vector<string> &ground, Position &p)
-{
-	if (p.x >= ground.size() || p.x < 0)
-		return 1;
-	if (p.y >= ground[p.x].size() || p.y < 0)
-		return 1;
-	return 0;
 }

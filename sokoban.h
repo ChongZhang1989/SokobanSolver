@@ -54,16 +54,22 @@ public:
 	}
 };
 
+typedef std::tr1::unordered_set<Position, PositionHash, PositionEqual> PositionSet;
+
 class StateHash {
 public:
 	size_t operator () (const State &a) const
 	{
-		int h = a.person.x ^ (a.person.y << 1);
+		PositionSet rec;
 		for (int i = 0; i < a.box.size(); ++i) {
-			h = h << 1;
-			h ^= a.box[i].x ^ (a.box[i].y << 1);
+			rec.insert(a.box[i]);
 		}
-		return (h);
+		int h = a.person.x ^ (a.person.y << 1);
+		for (PositionSet::iterator it = rec.begin(); it != rec.end(); ++it) {
+			h <<= 1;
+			h ^= it->x ^ ((it->y) << 1);
+		}
+		return h;
 	}
 };
 
@@ -73,7 +79,7 @@ public:
 	{
 		if (a.person != b.person)
 			return false;
-		std::tr1::unordered_set<Position, PositionHash, PositionEqual>rec;
+		PositionSet rec;
 		for (int i = 0; i < a.box.size(); ++i) {
 			rec.insert(a.box[i]);
 		}
@@ -97,6 +103,6 @@ int validState(int dx, int dy, State &now, const vector<string> &ground);
 void initState(const vector<string> &ground, State &init);
 void outputSolution(State &s);
 void getGoalPosition(const vector<string> &ground, vector<Position> &goal);
-int outOfBoundary(vector<string> &ground, Position &p);
+int outOfBoundary(const vector<string> &ground, Position p);
 
 #endif

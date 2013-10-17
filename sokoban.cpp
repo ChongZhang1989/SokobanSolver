@@ -16,7 +16,9 @@ void getInput(vector<string> &ground)
 }
 
 
-
+/**
+ * mark all places that are reachable
+ */
 void pullAndMark(vector<string> &mark, Position b, Position p)
 {
 	if (outOfBoundary(mark, p) || outOfBoundary(mark, b)) {
