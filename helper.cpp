@@ -60,7 +60,7 @@ int horizontalFreeze(int i, vector<int> &hfreeze, vector<int> &vfreeze, State &n
 	int b = isBox2(now, x, y - 1);
 	if (b != -1) {
 		if (vfreeze[b] == 0 || vfreeze[b] == -1)
-			return hfreeze[b] = 0;
+			return hfreeze[i] = 0;
 		if (vfreeze[b] == -2) {
 			if (verticalFreeze(b, hfreeze, vfreeze, now, ground) == 0) {
 				return hfreeze[i] = 0;
@@ -69,8 +69,9 @@ int horizontalFreeze(int i, vector<int> &hfreeze, vector<int> &vfreeze, State &n
 	}
 	b = isBox2(now, x, y + 1);
 	if (b != -1) {
+		if (x == 6 && y == 11)
 		if (vfreeze[b] == 0 || vfreeze[b] == -1)
-			return hfreeze[b] = 0;
+			return hfreeze[i] = 0;
 		if (vfreeze[b] == -2) {
 			if (verticalFreeze(b, hfreeze, vfreeze, now, ground) == 0) {
 				return hfreeze[i] = 0;
@@ -111,7 +112,7 @@ int verticalFreeze(int i, vector<int> &hfreeze, vector<int> &vfreeze, State &now
 	b = isBox2(now, x + 1, y);
 	if (b != -1) {
 		if (hfreeze[b] == 0 || hfreeze[b] == -1) {
-			return vfreeze[b] = 0;
+			return vfreeze[i] = 0;
 		}
 		if (hfreeze[b] == -2) {
 			if (horizontalFreeze(b, hfreeze, vfreeze, now, ground) == 0) {

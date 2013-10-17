@@ -52,10 +52,16 @@ void detectDeadSquare(vector<string> &ground)
 	}
 	for (int i = 0; i < ground.size(); ++i) {
 		for (int j = 0; j < ground[i].size(); ++j) {
-			if (!isWall(ground[i][j]) && !isPerson(ground[i][j]) && mark[i][j] != 'V') {
+			if (!isWall(ground[i][j]) && !isPerson(ground[i][j]) && !isBox(ground[i][j]) && mark[i][j] != 'V') {
 				ground[i][j] = 'X';
 			}
 		}
+	}
+}
+void showGround(vector<string> &ground)
+{
+	for (int i = 0; i < ground.size(); ++i) {
+		cout<<ground[i]<<endl;
 	}
 }
 int main()
@@ -63,6 +69,7 @@ int main()
 	vector<string>ground;
 	getInput(ground);
 	detectDeadSquare(ground);
+	showGround(ground);
 	puts("1) Breadth first search");
 	puts("2) Depth first search");
 	puts("3) Uniform cost search");
