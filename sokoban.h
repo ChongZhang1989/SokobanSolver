@@ -35,6 +35,7 @@ struct State {
 #define isGoal(c) (c == '.' ? 1 : ( c == '+' ? 2 : ( c == '*' ? 3 : 0) ) )
 #define isPerson(c) (c == '@' ? 1 : ( c == '+' ? 2 : 0) )
 #define isBox(c) (c == '$' ? 1 : ( c == '*' ? 2 : 0 ) )
+#define isDeadSquare(c) (c == 'X' ? 1 : 0)
 
 // unordered_set related
 class PositionHash {
@@ -96,5 +97,6 @@ int validState(int dx, int dy, State &now, const vector<string> &ground);
 void initState(const vector<string> &ground, State &init);
 void outputSolution(State &s);
 void getGoalPosition(const vector<string> &ground, vector<Position> &goal);
+int outOfBoundary(vector<string> &ground, Position &p);
 
 #endif

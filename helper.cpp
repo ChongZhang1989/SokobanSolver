@@ -18,6 +18,13 @@ void initState(const vector<string> &ground, State &init)
 	}
 }
 
+int isdeadlock(Position &box, State &now, const vector<string> &ground)
+{
+	if (isDeadSquare(ground[box.x][box.y]))
+		return 1;
+	return 0;
+}
+
 /**
  * Test whether the box can be moved to this place
  */
@@ -39,6 +46,8 @@ int isValidBox(Position &box, State &now, const vector<string> &ground)
 		if (box == now.box[i])
 			return 0;
 	}
+	if (isdeadlock(box, now, ground))
+		return 0;
 	return 1;
 }
 
@@ -102,4 +111,16 @@ void getGoalPosition(const vector<string> &ground, vector<Position> &goal)
 			}
 		}
 	}
+}
+
+/**
+ * judge if p is out of boundary
+ */
+int outOfBoundary(vector<string> &ground, Position &p)
+{
+	if (p.x >= ground.size() || p.x < 0)
+		return 1;
+	if (p.y >= ground[p.x].size() || p.y < 0)
+		return 1;
+	return 0;
 }
