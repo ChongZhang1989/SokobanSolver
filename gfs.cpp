@@ -42,11 +42,13 @@ void GFS(const vector<string> &ground)
 	StateSet rec;
 	priority_queue<GFSState>q;
 	vector<Position>goal;
+	vector<State>stateVector;
 	getGoalPosition(ground, goal);
 	GFSState init(0);
 	initState(ground, init.state);
 	rec.insert(init.state);
 	q.push(init);
+	stateVector.push_back(init.state);
 	GFSState result;
 	while (!q.empty()) {
 		GFSState tmp = q.top();
@@ -56,17 +58,20 @@ void GFS(const vector<string> &ground)
 			now.state.person.x += direction[i][0];
 			now.state.person.y += direction[i][1];
 			int s = validState(direction[i][0], direction[i][1], now.state, ground);
-			now.state.move.push_back(step[i]);
+			now.state.move = step[i];
+			now.state.previousStateNum = now.state.currentStateNum;
 			if (s == -1) {
 				result = now;
 				goto end;
 			} else if (s && !rec.count(now.state)) {
+				now.state.currentStateNum = stateVector.size();
 				evaluate(goal, now);
 				q.push(now);
+				stateVector.push_back(now.state);
 				rec.insert(now.state);
 			}
 		}
 	}
 end:
-	outputSolution(result.state);
+	outputSolution(stateVector, result.state);
 }

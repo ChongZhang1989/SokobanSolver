@@ -20,7 +20,9 @@ void UCS(const vector<string> &ground)
 	StateSet rec;
 	UCSState init(0);
 	initState(ground, init.state);
+	vector<State>stateVector;
 	q.push(init);
+	stateVector.push_back(init.state);
 	rec.insert(init.state);
 	UCSState result;
 	while (!q.empty()) {
@@ -31,17 +33,20 @@ void UCS(const vector<string> &ground)
 			now.state.person.x += direction[i][0];
 			now.state.person.y += direction[i][1];
 			int s = validState(direction[i][0], direction[i][1], now.state, ground);
-			now.state.move.push_back(step[i]);
+			now.state.move = step[i];
+			now.state.previousStateNum = now.state.currentStateNum;
 			if (s == -1) {
 				result = now;
 				goto end;
 			} else if (s && !rec.count(now.state)) {
 				now.cost += s;
+				now.state.currentStateNum = stateVector.size();
+				stateVector.push_back(now.state);
 				rec.insert(now.state);
 				q.push(now);
 			}
 		}
 	}
 end:
-	outputSolution(result.state);
+	outputSolution(stateVector, result.state);
 }

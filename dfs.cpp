@@ -3,7 +3,7 @@
 /**
  * recursive solver
  */
-void dfs(StateSet &rec, const vector<string> &ground, State state, int &flg, State &result)
+void dfs(vector<State> &stateVector, StateSet &rec, const vector<string> &ground, State state, int &flg, State &result)
 {
 	// got a result, return
 	if (flg)
@@ -13,14 +13,17 @@ void dfs(StateSet &rec, const vector<string> &ground, State state, int &flg, Sta
 		now.person.x += direction[i][0]; 
 		now.person.y += direction[i][1];
 		int s = validState(direction[i][0], direction[i][1], now, ground);
-		now.move.push_back(step[i]);
+		now.move = step[i];
+		now.previousStateNum = now.currentStateNum;
 		if (s == -1) {
 			result = now;
 			flg = 1;
 			return;
 		} else if (s && !rec.count(now)) {
+			now.currentStateNum = stateVector.size();
+			stateVector.push_back(now);
 			rec.insert(now);
-			dfs(rec, ground, now, flg, result);
+			dfs(stateVector, rec, ground, now, flg, result);
 		}
 	}
 }
@@ -33,10 +36,12 @@ void DFS(const vector<string> &ground)
 	State init;
 	initState(ground, init);
 	StateSet rec;
+	vector<State>stateVector;
+	stateVector.push_back(init);
 	int flg = 0;
 	State result;
-	dfs(rec, ground, init, flg, result);
+	dfs(stateVector, rec, ground, init, flg, result);
 	if (flg) {
-		outputSolution(result);
+		outputSolution(stateVector, result);
 	}
 }

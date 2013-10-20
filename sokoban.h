@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <vector>
 #include <queue>
+#include <stack>
 #include <map>
 #include <time.h>
 #include <tr1/unordered_map>
@@ -28,7 +29,10 @@ struct Position {
 struct State {
 	Position person;
 	vector<Position>box;
-	vector<char>move;
+	int previousStateNum;
+	int currentStateNum;
+	char move;
+	State() : previousStateNum(-1), currentStateNum(-1) {}
 };
 
 #define isWall(c) (c == '#' ? 1 : 0)
@@ -42,7 +46,7 @@ class PositionHash {
 public:
 	size_t operator () (const Position &a) const
 	{
-		return (a.x ^ (a.y << 1));
+		return (size_t)(a.x ^ (a.y << 1));
 	}
 };
 
@@ -64,10 +68,10 @@ public:
 		for (int i = 0; i < a.box.size(); ++i) {
 			rec.insert(a.box[i]);
 		}
-		int h = a.person.x ^ (a.person.y << 1);
+		size_t h = a.person.x ^ (a.person.y << 1);
 		for (PositionSet::iterator it = rec.begin(); it != rec.end(); ++it) {
 			h <<= 1;
-			h ^= it->x ^ ((it->y) << 1);
+			h ^= (it->x) ^ ((it->y) << 1);
 		}
 		return h;
 	}
@@ -92,6 +96,8 @@ public:
 
 
 typedef std::tr1::unordered_set<State, StateHash, StateEqual> StateSet;
+typedef std::tr1::unordered_map<State, int, StateHash, StateEqual> StateMap;
+
 
 // functions
 void BFS(const vector<string> &ground);
@@ -101,7 +107,7 @@ void GFS(const vector<string> &ground);
 void AStar(const vector<string> &ground);
 int validState(int dx, int dy, State &now, const vector<string> &ground);
 void initState(const vector<string> &ground, State &init);
-void outputSolution(State &s);
+void outputSolution(vector<State> &stateVector, State &s);
 void getGoalPosition(const vector<string> &ground, vector<Position> &goal);
 int outOfBoundary(const vector<string> &ground, Position p);
 

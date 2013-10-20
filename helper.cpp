@@ -20,6 +20,7 @@ int outOfBoundary(const vector<string> &ground, Position p)
 void initState(const vector<string> &ground, State &init)
 {
 	// initialization
+	init.currentStateNum = 0;
 	for (int i = 0; i < ground.size(); ++i) {
 		for (int j = 0; j < ground[i].size(); ++j) {
 			if (isPerson(ground[i][j])) {
@@ -217,13 +218,22 @@ int validState(int dx, int dy, State &now, const vector<string> &ground)
 /**
  * output the solution of the solver
  */
-void outputSolution(State &s)
+void outputSolution(vector<State> &stateVector, State &s)
 {
-	if (s.move.size() != 0) {
-		printf("%c", s.move[0]);
+	if (s.currentStateNum == -1 || s.previousStateNum == -1)
+		return;
+	stack<char>move;
+	move.push(s.move);
+	int statenum = s.previousStateNum;
+	while (statenum) {
+		move.push(stateVector[statenum].move);
+		statenum = stateVector[statenum].previousStateNum;
 	}
-	for (int i = 1; i < s.move.size(); ++i) {
-		printf(", %c", s.move[i]);
+	printf("%c", move.top());
+	move.pop();
+	while (!move.empty()) {
+		printf(", %c", move.top());
+		move.pop();
 	}
 	puts("");
 }

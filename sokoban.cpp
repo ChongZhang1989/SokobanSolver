@@ -69,7 +69,7 @@ int main()
 	vector<string>ground;
 	getInput(ground);
 	detectDeadSquare(ground);
-	showGround(ground);
+	//showGround(ground);
 	puts("1) Breadth first search");
 	puts("2) Depth first search");
 	puts("3) Uniform cost search");
