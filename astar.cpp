@@ -18,18 +18,16 @@ struct AState {
 void evaluate(vector<Position> &goal, AState &s)
 {
 	int cost = 0;
-	vector<bool>v(s.state.box.size(), false);
 	for (int i = 0; i < goal.size(); ++i) {
 		int mindis = 0x7fffffff;
 		int p = 0;
 		for (int j = 0; j < s.state.box.size(); ++j) {
-			if (!v[j] && mindis > distance(goal[i], s.state.box[j])) {
+			if (mindis > distance(goal[i], s.state.box[j])) {
 				mindis = distance(goal[i], s.state.box[j]);
 				p = j;
 			}
 		}
-		v[p] = true;
-		cost += mindis;
+		cost += mindis;	
 	}
 	s.hcost = cost;
 }
