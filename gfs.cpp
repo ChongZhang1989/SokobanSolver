@@ -1,5 +1,5 @@
 #include "sokoban.h"
-#define distance(a, b) (abs(a.x - b.x) + abs(a.y - b.y))
+#define distance(a, b) (fabs(a.x - b.x) + fabs(a.y - b.y))
 
 struct GFSState {
 	int cost;
