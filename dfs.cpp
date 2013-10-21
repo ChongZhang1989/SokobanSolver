@@ -3,7 +3,7 @@
 /**
  * recursive solver
  */
-void dfs(vector<State> &stateVector, StateSet &rec, const vector<string> &ground, State state, int &flg, State &result)
+void dfs(Statistics &stat, vector<State> &stateVector, StateSet &rec, const vector<string> &ground, State state, int &flg, State &result)
 {
 	// got a result, return
 	if (flg)
@@ -15,6 +15,7 @@ void dfs(vector<State> &stateVector, StateSet &rec, const vector<string> &ground
 		int s = validState(direction[i][0], direction[i][1], now, ground);
 		now.move = step[i];
 		now.previousStateNum = now.currentStateNum;
+		stat.anodes++;
 		if (s == -1) {
 			result = now;
 			flg = 1;
@@ -23,7 +24,9 @@ void dfs(vector<State> &stateVector, StateSet &rec, const vector<string> &ground
 			now.currentStateNum = stateVector.size();
 			stateVector.push_back(now);
 			rec.insert(now);
-			dfs(stateVector, rec, ground, now, flg, result);
+			dfs(stat, stateVector, rec, ground, now, flg, result);
+		} else if (s) {
+			stat.bnodes++;
 		}
 	}
 }
@@ -33,6 +36,8 @@ void dfs(vector<State> &stateVector, StateSet &rec, const vector<string> &ground
  */
 void DFS(const vector<string> &ground)
 {
+	int time1 = clock();
+	Statistics stat;
 	State init;
 	initState(ground, init);
 	StateSet rec;
@@ -40,7 +45,10 @@ void DFS(const vector<string> &ground)
 	stateVector.push_back(init);
 	int flg = 0;
 	State result;
-	dfs(stateVector, rec, ground, init, flg, result);
+	dfs(stat, stateVector, rec, ground, init, flg, result);
+	stat.dnodes = rec.size() + 1;
+	stat.runtime = (clock() - time1) * 1.0 / CLOCKS_PER_SEC;
+	outputStat(stat);
 	if (flg) {
 		outputSolution(stateVector, result);
 	}

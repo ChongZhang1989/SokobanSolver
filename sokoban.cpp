@@ -77,7 +77,6 @@ int main()
 	puts("5) A* search");
 	int choice;
 	cin>>choice;
-	int t1 = clock();
 	switch(choice) {
 		case 1: BFS(ground); break;
 		case 2: DFS(ground); break;
@@ -85,7 +84,5 @@ int main()
 		case 4: GFS(ground); break;
 		case 5: AStar(ground); break;
 	}
-	int t2 = clock();
-	printf("Running Time : %.3lf\n", (t2 - t1) * 1.0 / CLOCKS_PER_SEC);
 	return 0;
 }

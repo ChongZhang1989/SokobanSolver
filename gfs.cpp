@@ -39,6 +39,8 @@ void evaluate(vector<Position> &goal, GFSState &s)
  */
 void GFS(const vector<string> &ground)
 {
+	int time1 = clock();
+	Statistics stat;
 	StateSet rec;
 	priority_queue<GFSState>q;
 	vector<Position>goal;
@@ -60,6 +62,7 @@ void GFS(const vector<string> &ground)
 			int s = validState(direction[i][0], direction[i][1], now.state, ground);
 			now.state.move = step[i];
 			now.state.previousStateNum = now.state.currentStateNum;
+			stat.anodes++;
 			if (s == -1) {
 				result = now;
 				goto end;
@@ -69,9 +72,15 @@ void GFS(const vector<string> &ground)
 				q.push(now);
 				stateVector.push_back(now.state);
 				rec.insert(now.state);
+			} else if (s) {
+				stat.bnodes++;
 			}
 		}
 	}
 end:
+	stat.cnodes = q.size();
+	stat.dnodes = rec.size() + 1;
+	stat.runtime = (clock() - time1) * 1.0 / CLOCKS_PER_SEC;
+	outputStat(stat);
 	outputSolution(stateVector, result.state);
 }

@@ -35,6 +35,19 @@ struct State {
 	State() : previousStateNum(-1), currentStateNum(-1) {}
 };
 
+struct Statistics {
+	int anodes;
+	int bnodes;
+	int cnodes;
+	int dnodes;
+	double runtime;
+	Statistics()
+	{
+		anodes = bnodes = cnodes = dnodes = 0;
+		runtime = 0;
+	}
+};
+
 #define isWall(c) (c == '#' ? 1 : 0)
 #define isGoal(c) (c == '.' ? 1 : ( c == '+' ? 2 : ( c == '*' ? 3 : 0) ) )
 #define isPerson(c) (c == '@' ? 1 : ( c == '+' ? 2 : 0) )
@@ -110,5 +123,6 @@ void initState(const vector<string> &ground, State &init);
 void outputSolution(vector<State> &stateVector, State &s);
 void getGoalPosition(const vector<string> &ground, vector<Position> &goal);
 int outOfBoundary(const vector<string> &ground, Position p);
+void outputStat(Statistics &stat);
 
 #endif

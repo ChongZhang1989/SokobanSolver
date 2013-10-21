@@ -37,6 +37,8 @@ void evaluate(vector<Position> &goal, AState &s)
  */
 void AStar(const vector<string> &ground)
 {
+	int time1 = clock();
+	Statistics stat;
 	StateMap rec;
 	priority_queue<AState>q;
 	vector<Position>goal;
@@ -58,13 +60,16 @@ void AStar(const vector<string> &ground)
 			int s = validState(direction[i][0], direction[i][1], now.state, ground);
 			now.state.move = step[i];
 			now.state.previousStateNum = now.state.currentStateNum;
+			stat.anodes++;
 			if (s == -1) {
 				evaluate(goal, now);
 				result = now;
 				goto end;
 			} else if (s) {
-				if (rec.count(now.state) && rec[now.state] <= now.gcost)
+				if (rec.count(now.state) && rec[now.state] <= now.gcost) {
+					stat.bnodes++;
 					continue;
+				}
 				now.state.currentStateNum = stateVector.size();
 				evaluate(goal, now);
 				now.gcost += 1;
@@ -75,5 +80,9 @@ void AStar(const vector<string> &ground)
 		}
 	}
 end:
+	stat.cnodes = q.size();
+	stat.dnodes = rec.size() + 1;
+	stat.runtime = (clock() - time1) * 1.0 / CLOCKS_PER_SEC;
+	outputStat(stat);
 	outputSolution(stateVector, result.state);
 }
