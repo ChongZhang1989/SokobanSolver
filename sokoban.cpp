@@ -64,7 +64,7 @@ void showGround(vector<string> &ground)
 		cout<<ground[i]<<endl;
 	}
 }
-int main()
+int main(int argc, char *argv[])
 {
 	vector<string>ground;
 	getInput(ground);
@@ -76,7 +76,7 @@ int main()
 	puts("4) Greedy best first search");
 	puts("5) A* search");
 	int choice;
-	cin>>choice;
+	sscanf(argv[argc - 1], "%d", &choice);
 	switch(choice) {
 		case 1: BFS(ground); break;
 		case 2: DFS(ground); break;
