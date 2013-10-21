@@ -5,6 +5,7 @@
 #include <queue>
 #include <stack>
 #include <map>
+#include <cmath>
 #include <time.h>
 #include <tr1/unordered_map>
 #include <tr1/unordered_set>
