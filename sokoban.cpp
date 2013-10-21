@@ -70,11 +70,14 @@ int main(int argc, char *argv[])
 	getInput(ground);
 	detectDeadSquare(ground);
 	//showGround(ground);
+	/*
 	puts("1) Breadth first search");
 	puts("2) Depth first search");
 	puts("3) Uniform cost search");
 	puts("4) Greedy best first search");
 	puts("5) A* search");
+	*/
+	freopen("output.txt", "w", stdout);
 	int choice;
 	sscanf(argv[argc - 1], "%d", &choice);
 	switch(choice) {
