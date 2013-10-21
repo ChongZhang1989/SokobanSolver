@@ -220,6 +220,7 @@ int validState(int dx, int dy, State &now, const vector<string> &ground)
  */
 void outputSolution(vector<State> &stateVector, State &s)
 {
+	puts("Solution:");
 	if (s.currentStateNum == -1 || s.previousStateNum == -1)
 		return;
 	stack<char>move;
@@ -240,11 +241,11 @@ void outputSolution(vector<State> &stateVector, State &s)
 
 void outputStat(Statistics &stat)
 {
-	printf("number of nodes generated : %d\n", stat.anodes);
-	printf("number of nodes containing states that were generated previously : %d\n", stat.bnodes);
-	printf("number of nodes on the fringe when termination occurs : %d\n", stat.cnodes);
-	printf("number of nodes on the explored list when termination occurs : %d\n", stat.dnodes);
-	printf("actual run time of the algorithm : %.3lf\n", stat.runtime);
+	printf("Number of nodes generated : %d\n", stat.anodes);
+	printf("Number of nodes containing states that were generated previously : %d\n", stat.bnodes);
+	printf("Number of nodes on the fringe when termination occurs : %d\n", stat.cnodes);
+	printf("Number of nodes on the explored list when termination occurs : %d\n", stat.dnodes);
+	printf("Run time of the algorithm : %.3lfs\n", stat.runtime);
 }
 
 /**
